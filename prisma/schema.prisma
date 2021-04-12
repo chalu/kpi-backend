@@ -1,0 +1,192 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model activity_logs {
+  id             Int       @id @default(dbgenerated("nextval('activity_logs_id_seq'::regclass)"))
+  user_id        String?   @db.VarChar(50)
+  status         String?   @db.VarChar(20)
+  operation_type String?   @db.VarChar(50)
+  added_at       DateTime? @default(now()) @db.Timestamptz(6)
+  description    String?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model api_logs {
+  id             Int       @id  @default(dbgenerated("nextval('api_logs_id_seq'::regclass)"))
+  api_id         String?   @db.VarChar(50)
+  sandbox_id     String?   @db.VarChar(50)
+  user_id        String?   @db.VarChar(50)
+  status         String?   @db.VarChar(20)
+  operation_type String?   @db.VarChar(50)
+  description    String?
+  added_at       DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model apis {
+  id            String    @id @default(dbgenerated("('api-'::text || lower(replace(((uuid_generate_v1mc())::character varying(50))::text, '-'::text, ''::text)))")) @db.VarChar
+  sandbox_id    String?   @db.VarChar(50)
+  api_provider  String?   @db.VarChar(200)
+  api_url       String?
+  path_url      String?
+  description   String?
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime? @default(now()) @db.Timestamptz(6)
+  api_interface String?
+  name          String?   @db.VarChar(200)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model document_logs {
+  id             Int       @id @default(dbgenerated("nextval('document_logs_id_seq'::regclass)"))
+  user_id        String?   @db.VarChar(50)
+  sandbox_id     String?   @db.VarChar(50)
+  name           String?   @db.VarChar(100)
+  status         String?   @db.VarChar(20)
+  operation_type String?   @db.VarChar(50)
+  accessed_at    DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model login_logs {
+  id           Int       @id @default(dbgenerated("nextval('login_logs_id_seq'::regclass)"))
+  latitude     String?   @db.VarChar(30)
+  longitude    String?   @db.VarChar(30)
+  email        String?   @db.VarChar(150)
+  phone_number String?   @db.VarChar(30)
+  status       String?   @db.VarChar(20)
+  added_at     DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model membership_verification {
+  id                 Int       @id @default(dbgenerated("nextval('membership_verification_id_seq'::regclass)"))
+  first_name         String?   @db.VarChar(100)
+  last_name          String?   @db.VarChar(100)
+  phone_number       String?   @db.VarChar(100)
+  email              String?   @db.VarChar(100)
+  verification_token String?   @db.VarChar(100)
+  created_at         DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime? @default(now()) @db.Timestamptz(6)
+  is_confirmed       Boolean?
+  interest           String?   @db.VarChar(100)
+  age_range          String?   @db.VarChar(100)
+  csrf_token         String?   @db.VarChar(100)
+  location           String?   @db.VarChar(100)
+  company_name       String?   @db.VarChar(100)
+  specialty          String?   @db.VarChar(100)
+  gender             String?   @db.VarChar
+  facebook_id        String?   @db.VarChar(100)
+  twitter_id         String?   @db.VarChar(100)
+  linkedin_id        String?   @db.VarChar(100)
+  instagram_id       String?   @db.VarChar(100)
+  referred_by        String?   @db.VarChar(100)
+}
+
+model memberships {
+  id                              String                           @id @default(dbgenerated("lower(replace(((uuid_generate_v1mc())::character varying(50))::text, '-'::text, ''::text))")) @db.VarChar
+  first_name                      String?                          @db.VarChar(100)
+  last_name                       String?                          @db.VarChar(100)
+  email                           String?                          @db.VarChar(100)
+  phone_number                    String?                          @db.VarChar(100)
+  userid                          String?                          @db.VarChar(100)
+  access_code                     String?                          @db.VarChar(100)
+  created_at                      DateTime?                        @default(now()) @db.Timestamptz(6)
+  updated_at                      DateTime?                        @db.Timestamptz(6)
+  acces_code                      String?                          @db.VarChar(100)
+  interest                        String?                          @db.VarChar(100)
+  age_range                       String?                          @db.VarChar(100)
+  location                        String?                          @db.VarChar(100)
+  company_name                    String?                          @db.VarChar(100)
+  specialty                       String?                          @db.VarChar(100)
+  gender                          String?                          @db.VarChar
+  facebook_id                     String?                          @db.VarChar(100)
+  twitter_id                      String?                          @db.VarChar(100)
+  linkedin_id                     String?                          @db.VarChar(100)
+  instagram_id                    String?                          @db.VarChar(100)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model operation_types {
+  code        String @id @db.VarChar(4)
+  name        String? @db.VarChar(50)
+  description String? @db.VarChar(255)
+}
+
+model sandbox {
+  id           String    @id @default(dbgenerated("('sandbox-'::text || lower(replace(((uuid_generate_v1mc())::character varying(50))::text, '-'::text, ''::text)))")) @db.VarChar
+  name         String?   @db.VarChar(100)
+  api_provider String?   @db.VarChar(200)
+  api_url      String?
+  doc_url      String?
+  image_url    String?
+  description  String?
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+  added_by     String?   @db.VarChar(50)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model user_activity_logs {
+  id             Int       @id @default(dbgenerated("nextval('user_activity_logs_id_seq'::regclass)"))
+  user_id        String?   @db.VarChar(50)
+  status         String?   @db.VarChar(20)
+  operation_type String?   @db.VarChar(50)
+  description    String?
+  added_at       DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model user_sandbox {
+  id         String    @id @default(dbgenerated("('user-sandbox-'::text || lower(replace(((uuid_generate_v1mc())::character varying(50))::text, '-'::text, ''::text)))")) @db.VarChar
+  user_id    String?   @db.VarChar(50)
+  sandbox_id String?   @db.VarChar(50)
+  added_at   DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model users {
+  id                       String           @id @default(dbgenerated("('user-'::text || lower(replace(((uuid_generate_v1mc())::character varying(50))::text, '-'::text, ''::text)))")) @db.VarChar
+  first_name               String?          @db.VarChar(100)
+  last_name                String?          @db.VarChar(100)
+  email                    String?          @db.VarChar(150)
+  phone_number             String?          @db.VarChar(30)
+  password                 String?
+  salt                     String?          @db.VarChar
+  kyc_compliance           Boolean?
+  is_confirmed             Boolean?
+  confirmation_token       String?
+  confirmation_token_at    DateTime?        @db.Timestamptz(6)
+  password_reset_token     String?
+  password_reset_token_exp DateTime?        @db.Timestamptz(6)
+  created_at               DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime?        @db.Timestamptz(6)
+  disabled_at              DateTime?        @db.Timestamptz(6)
+  sandbox_token            String?
+  sandbox_token_exp        DateTime?        @db.Timestamptz(6)
+  role_code                String?          @db.VarChar(4)
+  last_login               DateTime?        @db.Timestamptz(6)
+  access_code              String?          @db.VarChar(50)
+  age_range                String?          @db.VarChar(100)
+  interest                 String?          @db.VarChar(100)
+  location                 String?          @db.VarChar(100)
+  company_name             String?          @db.VarChar(100)
+  specialty                String?          @db.VarChar(100)
+  gender                   String?          @db.VarChar
+  facebook_id              String?          @db.VarChar(100)
+  twitter_id               String?          @db.VarChar(100)
+  linkedin_id              String?          @db.VarChar(100)
+  instagram_id             String?          @db.VarChar(100)
+  image_url                String?
+  title                    String?
+  judge_type               String?          @db.VarChar(50)
+}
+
+enum gender {
+  m
+  f
+  o
+}
