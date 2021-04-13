@@ -1865,6 +1865,11 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
+prettier-plugin-prisma@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-prisma/-/prettier-plugin-prisma-0.7.0.tgz#72a8cb9e9c45f5089c739219622b0a2103a673b5"
+  integrity sha512-fSdrFk3HrKhV3rdxVh6SIAcPTRpliNakAaxEjArsQQHNkxwVZ7Oy26ozbSepx4ggdYO6WybkhpWwM74kCFwYBQ==
+
 prettier@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.1.tgz#795a1a78dd52f073da0cd42b21f9c91381923ff5"

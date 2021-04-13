@@ -42,6 +42,7 @@
     "nodemon": "^2.0.7",
     "openapi-typescript-codegen": "^0.9.3",
     "prettier": "^2.2.1",
+    "prettier-plugin-prisma": "^0.7.0",
     "prisma": "^2.20.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
