@@ -10,7 +10,7 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc -p .",
-    "codegen:oas": "openapi --input ./src/spec/platform.v1.yaml --output ./src/api-spec/ --exportCore false --exportServices false"
+    "codegen:oas": "openapi --input ./src/spec/platform.v1.yaml --output ./src/oas-contract/ --exportCore false --exportServices false"
   },
   "repository": {
     "type": "git",

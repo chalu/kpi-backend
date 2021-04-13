@@ -1,5 +1,5 @@
 import express, { Request } from "express";
-import { APICallsKPIResponse } from "../../api-spec/index"
+import { APICallsKPIResponse } from "../../oas-contract"
  
 import { ApiHandler, respondAs, respondWith } from "../core";
 
