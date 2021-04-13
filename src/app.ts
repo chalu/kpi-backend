@@ -1,7 +1,6 @@
 import cors from "cors";
 import path from "path";
 import morgan from "morgan";
-import { PrismaClient } from "@prisma/client";
 import * as APIValidator from "express-openapi-validator";
 import express, {
   Request,
@@ -10,9 +9,9 @@ import express, {
   ErrorRequestHandler,
 } from "express";
 
+import APIRouter from './endpoints';
+
 const app = express();
-const prisma = new PrismaClient();
-const APIVersion = process.env.API_VERSION;
 
 // Add critical middleware
 app.use(cors());
@@ -21,24 +20,25 @@ app.use(morgan("tiny"));
 
 // Serve basic static assets
 // In this case, just the standard favicon
-// and the API specification
-const apiSpec = path.join(__dirname, "oas.yaml");
-// app.use(`/${APIVersion}/spec`, express.static(apiSpec));
-
 const ico = path.join(__dirname, "logo-dark.ico");
 app.use("/favicon.ico", express.static(ico));
 
-// app.use(
-//   APIValidator.middleware({
-//     apiSpec,
-//     validateRequests: true
-//   })
-// );
 
-app.get("/members", async (req, res) => {
-  const members = await prisma.memberships.findMany();
-  res.json({ members });
-});
+// Turn on spec-driven validation for HTTP requests
+// Erring requests will not get to the controllers.
+// Raises a 400 that is relayed by the catch-all error handler
+const apiSpec = path.join(__dirname, "spec/platform.v1.yaml");
+app.use(
+  APIValidator.middleware({
+    apiSpec,
+    validateRequests: true
+  })
+);
+
+// Mount controllers
+const APIVersion = process.env.API_VERSION;
+app.use(`/${APIVersion}`, APIRouter);
+
 
 // Catch-all error handler
 const catchAllErrors: ErrorRequestHandler = (
