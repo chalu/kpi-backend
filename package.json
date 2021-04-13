@@ -10,7 +10,7 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc -p .",
-    "gen:oas:models": "openapi --input ./src/spec/sandbox.yml --output ./src/api-spec/ --exportCore false --exportServices false"
+    "gen:oas:models": "openapi --input ./src/spec/platform.v1.yaml --output ./src/api-spec/ --exportCore false --exportServices false"
   },
   "repository": {
     "type": "git",
