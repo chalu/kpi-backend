@@ -7,20 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model apiLogs {
+model ApiLog {
   id             Int       @id @default(autoincrement())
-  api_id         String?   @db.VarChar(50) @map("apiId")
-  sandbox_id     String?   @db.VarChar(50) @map("sandboxId")
-  user_id        String?   @db.VarChar(50) @map("userId")
-  status         String?   @db.VarChar(20) @map("operationType")
+  api_id         String?   @db.VarChar(50)
+  sandbox_id     String?   @db.VarChar(50)
+  user_id        String?   @db.VarChar(50)
+  status         String?   @db.VarChar(20)
   operation_type String?   @db.VarChar(50)
   description    String?
-  added_at       DateTime? @default(now()) @db.Timestamptz(6) @map("addedAt")
+  added_at       DateTime? @default(now()) @db.Timestamptz(6)
 
   @@map("api_logs")
 }
 
-model documentLogs {
+model DocumentLog {
   id             Int       @id @default(autoincrement())
   user_id        String?   @db.VarChar(50) @map("userId")
   sandbox_id     String?   @db.VarChar(50) @map("sandboxId")
@@ -32,7 +32,7 @@ model documentLogs {
    @@map("document_logs")
 }
 
-model memberships {
+model Membership {
   id           Int       @id @default(autoincrement())
   member_id    String?   @db.VarChar(100) @map("memberId")
   email        String?   @db.VarChar(100)
@@ -53,4 +53,6 @@ model memberships {
   twitter_id   String?   @db.VarChar(100) @map("twitterId")
   linkedin_id  String?   @db.VarChar(100) @map("linkedinID")
   instagram_id String?   @db.VarChar(100) @map("instagramId")
+
+   @@map("memberships")
 }
