@@ -8,10 +8,27 @@ import { ApiHandler, respondAs, respondWith } from "../core";
 const router = express.Router();
 const prisma = new PrismaClient();
 
-const getSandboxAPICalls: ApiHandler<APICallsKPIResponse> = async (reqquest: Request) => {
+const getSandboxAPICalls: ApiHandler<APICallsKPIResponse> = async (request: Request) => {
   let response;
+  const { fromDate, toDate } = request.body;
+
+  const query = {
+    where: {
+      AND: [{
+        added_at: {
+          gte: new Date(parseInt(fromDate, 10))
+        }
+      }, {
+        added_at: {
+          lte: new Date(parseInt(toDate, 10))
+        }
+      }]
+    }
+  }
+
   try {
-    const allCalls: ReadonlyArray<ApiLog> = await prisma.apiLog.findMany();
+    const allCalls: ReadonlyArray<ApiLog> = await prisma.apiLog.findMany(query);
+
     const payload: APICallsKPIResponse = {
         calls:allCalls.length
     };
@@ -19,7 +36,6 @@ const getSandboxAPICalls: ApiHandler<APICallsKPIResponse> = async (reqquest: Req
     response = respondAs(200, payload);
 
   } catch (e) {
-    console.log(e.message);
     response = e;
   }
 
