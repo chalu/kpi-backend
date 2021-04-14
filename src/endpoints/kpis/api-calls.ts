@@ -3,7 +3,7 @@ import { PrismaClient, ApiLog } from "@prisma/client";
 
 import { APICallsKPIResponse } from "../../oas-contract"
 
-import { ApiHandler, respondAs, respondWith } from "../core";
+import { ApiHandler, respondAs, respondWith, errAs } from "../core";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -36,7 +36,7 @@ const getSandboxAPICalls: ApiHandler<APICallsKPIResponse> = async (request: Requ
     response = respondAs(200, payload);
 
   } catch (e) {
-    response = e;
+    response = errAs(e);
   }
 
   return response;

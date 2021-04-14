@@ -5,13 +5,13 @@ interface IResponse {
   readonly apply: (res: Response) => void;
 }
 
-interface IResponseJson<V extends object> extends IResponse {
-  value: V;
+interface IResponseJson<P> extends IResponse {
+  payload: P;
 }
 
-export type ApiHandler<R extends object> = (req: Request) => Promise<IResponseJson<R>>;
+export type ApiHandler<V> = (req: Request) => Promise<IResponseJson<V>>;
 
-export function respondWith<V extends object>(handler: ApiHandler<V>): RequestHandler {
+export function respondWith<V>(handler: ApiHandler<V>): RequestHandler {
   return (request, response, _) => {
     // pass the Request to the handler
     handler(request).then(
@@ -23,10 +23,27 @@ export function respondWith<V extends object>(handler: ApiHandler<V>): RequestHa
   };
 }
 
-export function respondAs<V extends object>(kind: number, value: V): IResponseJson<V> {
+export function respondAs<P>(kind: number, payload: P): IResponseJson<P> {
   return {
     kind,
-    value,
-    apply: (res) => res.status(kind).json(value),
+    payload,
+    apply(res) {
+      res.status(this.kind).json(this.payload)
+    }
+  };
+}
+
+export function errAs<E>(payload: E | IResponseJson<E>): IResponseJson<E> {
+  // Do we have a IResponse? Just pass it on!
+  if ('kind' in payload) return payload;
+
+  return {
+    kind: 500,
+    payload,
+    apply(res) {
+      res.status(this.kind).json({
+        message: "Unable to complete your request due to an unexpected server error"
+      });
+    }
   };
 }
