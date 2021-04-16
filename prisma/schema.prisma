@@ -22,12 +22,12 @@ model ApiLog {
 
 model DocumentLog {
   id             Int       @id @default(autoincrement())
-  user_id        String?   @db.VarChar(50) @map("userId")
-  sandbox_id     String?   @db.VarChar(50) @map("sandboxId")
+  user_id        String?   @db.VarChar(50)
+  sandbox_id     String?   @db.VarChar(50)
   name           String?   @db.VarChar(100)
   status         String?   @db.VarChar(20)
-  operation_type String?   @db.VarChar(50) @map("operationType")
-  accessed_at    DateTime? @default(now()) @db.Timestamptz(6) @map("accessedAt")
+  operation_type String?   @db.VarChar(50)
+  accessed_at    DateTime? @default(now()) @db.Timestamptz(6)
 
    @@map("document_logs")
 }
