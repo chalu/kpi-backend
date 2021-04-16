@@ -1,0 +1,210 @@
+openapi: 3.0.0
+info:
+  title: platform
+  version: '1.0'
+  description: APIs for the FSI core platform services
+  contact:
+    name: Charles Odili
+    email: chaluwa@gmail.com
+  license:
+    name: MIT
+    url: 'https://github.com/fsi-sandbox/platform-backend/blob/main/LICENSE'
+servers:
+  - url: 'http://localhost:5000'
+    description: Dev
+paths:
+  /v1/kpis/sandbox-api-calls:
+    get:
+      summary: Get API Calls
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIsUseResponse'
+              examples:
+                success:
+                  value:
+                    calls: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                bad-request:
+                  value:
+                    message: Unable to proceed. Pls check your request data
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: Unable to proceed. Inssuficient user permissions
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: Error completing your request. Pls contact the admin or try again later
+                    details: {}
+      operationId: get-v1-kpis-sandbox-api-calls
+      description: Get sandbox API calls count for a given period of time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/APIsUseRequest'
+            examples:
+              Q3-2020:
+                value:
+                  fromDate: '1596236400000'
+                  toDate: '1604185200000'
+        description: Request data for making the API call
+    parameters: []
+  /v1/kpis/sandbox-api-downloads:
+    get:
+      summary: Get API Downloads
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIsUseResponse'
+              examples:
+                success:
+                  value:
+                    calls: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                bad-request:
+                  value:
+                    message: Unable to proceed. Pls check your request data
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: Unable to proceed. Inssuficient user permissions
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: Error completing your request. Pls contact the admin or try again later
+                    details: {}
+      operationId: get-v1-kpis-sandbox-api-downloads
+      description: Get sandbox API downloads count for a given period of time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/APIsUseRequest'
+            examples:
+              Q3-2020:
+                value:
+                  fromDate: '1596236400000'
+                  toDate: '1604185200000'
+        description: Request data for making the API call
+components:
+  schemas:
+    APIsUseRequest:
+      title: ''
+      type: object
+      x-tags:
+        - KPIs
+        - admin
+        - ''
+      description: HTTP request schema for getting Sandbox API calls KPI data
+      properties:
+        fromDate:
+          type: string
+          example: '1618255921030'
+          description: UNIX timestamp of the start date (inclusive) for API calls to include
+          pattern: '^\d{13}$'
+          minLength: 13
+          maxLength: 13
+        toDate:
+          type: string
+          description: UNIX timestamp of the end date (exclusive) for API calls to include
+          example: '1618255921030'
+          minLength: 13
+          maxLength: 13
+          pattern: '^\d{13}$'
+      required:
+        - fromDate
+        - toDate
+    APIsUseResponse:
+      title: APIsUseResponse
+      type: object
+      x-tags:
+        - KPIs
+        - admin
+      description: HTTP response schema for getting Sandbox API calls KPI data
+      properties:
+        calls:
+          type: integer
+          format: int32
+          example: 604
+          description: The number of API calls for the given date range
+        message:
+          type: string
+          description: Optional response message for the request
+          example: request completed in 305 milliseconds
+      required:
+        - calls
+    ErrorResponse:
+      title: ErrorResponse
+      type: object
+      x-tags:
+        - admin
+      description: Schema for error responses from the server
+      properties:
+        message:
+          type: string
+          example: 'Error completing your request. '
+          description: A brief description of the error that occured or action the user might need to take
+        details:
+          type: object
+          description: An optional dictionary of keys and values for the error raised
+      required:
+        - message
+tags:
+  - name: admin
+  - name: KPIs
