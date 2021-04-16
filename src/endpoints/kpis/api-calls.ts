@@ -28,7 +28,6 @@ const getSandboxAPICalls: ApiHandler<APIsUseResponse> = async (request: Request)
 
   try {
     const callsCount = await prisma.apiLog.count(query);
-
     const payload: APIsUseResponse = {
         calls:callsCount
     };

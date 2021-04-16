@@ -37,6 +37,8 @@ export function errAs<E>(payload: E | IResponseJson<E>): IResponseJson<E> {
   // Do we have a IResponse? Just pass it on!
   if ('kind' in payload) return payload;
 
+  console.log(payload);
+
   return {
     kind: 500,
     payload,
