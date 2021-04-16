@@ -25,7 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/APICallsKPIResponse'
+                $ref: '#/components/schemas/APIsUseResponse'
               examples:
                 success:
                   value:
@@ -64,18 +64,87 @@ paths:
                   value:
                     message: Error completing your request. Pls contact the admin or try again later
                     details: {}
-      operationId: get-reporting-kpis-api-calls
-      description: Get sandbox API calls data for a given period of time
+      operationId: get-v1-kpis-sandbox-api-calls
+      description: Get sandbox API calls count for a given period of time
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/APICallsKPIRequest'
+              $ref: '#/components/schemas/APIsUseRequest'
+            examples:
+              Q3-2020:
+                value:
+                  fromDate: '1596236400000'
+                  toDate: '1604185200000'
         description: Request data for making the API call
     parameters: []
+  /v1/kpis/sandbox-api-downloads:
+    get:
+      summary: Get API Downloads
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIsUseResponse'
+              examples:
+                success:
+                  value:
+                    calls: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                bad-request:
+                  value:
+                    message: Unable to proceed. Pls check your request data
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: Unable to proceed. Inssuficient user permissions
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: Error completing your request. Pls contact the admin or try again later
+                    details: {}
+      operationId: get-v1-kpis-sandbox-api-downloads
+      description: Get sandbox API downloads count for a given period of time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/APIsUseRequest'
+            examples:
+              Q3-2020:
+                value:
+                  fromDate: '1596236400000'
+                  toDate: '1604185200000'
+        description: Request data for making the API call
 components:
   schemas:
-    APICallsKPIRequest:
+    APIsUseRequest:
       title: ''
       type: object
       x-tags:
@@ -98,15 +167,11 @@ components:
           minLength: 13
           maxLength: 13
           pattern: '^\d{13}$'
-        uniqueEntries:
-          type: boolean
-          description: Set to `true` to eliminate duplicate entries in the response
       required:
         - fromDate
         - toDate
-        - uniqueEntries
-    APICallsKPIResponse:
-      title: APICallsKPIResponse
+    APIsUseResponse:
+      title: APIsUseResponse
       type: object
       x-tags:
         - KPIs

@@ -1,16 +1,15 @@
 import express, { Request } from "express";
-import { PrismaClient, ApiLog } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
-import { APICallsKPIResponse } from "../../oas-contract"
+import { APIsUseResponse } from "../../oas-contract"
 
 import { ApiHandler, respondAs, respondWith, errAs } from "../core";
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
-const getSandboxAPICalls: ApiHandler<APICallsKPIResponse> = async (request: Request) => {
+const getSandboxAPICalls: ApiHandler<APIsUseResponse> = async (request: Request) => {
   let response;
-  // TODO remove unique filter from API spec
   const { fromDate, toDate } = request.body;
 
   const query = {
@@ -30,7 +29,7 @@ const getSandboxAPICalls: ApiHandler<APICallsKPIResponse> = async (request: Requ
   try {
     const callsCount = await prisma.apiLog.count(query);
 
-    const payload: APICallsKPIResponse = {
+    const payload: APIsUseResponse = {
         calls:callsCount
     };
 
