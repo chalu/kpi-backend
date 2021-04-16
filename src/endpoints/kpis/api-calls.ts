@@ -10,6 +10,7 @@ const prisma = new PrismaClient();
 
 const getSandboxAPICalls: ApiHandler<APICallsKPIResponse> = async (request: Request) => {
   let response;
+  // TODO remove unique filter from API spec
   const { fromDate, toDate } = request.body;
 
   const query = {
@@ -27,10 +28,10 @@ const getSandboxAPICalls: ApiHandler<APICallsKPIResponse> = async (request: Requ
   }
 
   try {
-    const allCalls: ReadonlyArray<ApiLog> = await prisma.apiLog.findMany(query);
+    const callsCount = await prisma.apiLog.count(query);
 
     const payload: APICallsKPIResponse = {
-        calls:allCalls.length
+        calls:callsCount
     };
 
     response = respondAs(200, payload);

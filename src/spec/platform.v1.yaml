@@ -13,7 +13,7 @@ servers:
   - url: 'http://localhost:5000'
     description: Dev
 paths:
-  /kpis/sandbox-api-calls:
+  /v1/kpis/sandbox-api-calls:
     get:
       summary: Get API Calls
       tags:
@@ -87,13 +87,13 @@ components:
         fromDate:
           type: string
           example: '1618255921030'
-          description: UNIX timestamp (inclusive) of the start date for API calls to include
+          description: UNIX timestamp of the start date (inclusive) for API calls to include
           pattern: '^\d{13}$'
           minLength: 13
           maxLength: 13
         toDate:
           type: string
-          description: UNIX timestamp (inclusive) of the end date for API calls to include
+          description: UNIX timestamp of the end date (exclusive) for API calls to include
           example: '1618255921030'
           minLength: 13
           maxLength: 13
