@@ -5,13 +5,13 @@
 /**
  * HTTP response schema for getting Sandbox API calls KPI data
  */
-export type APIsUseResponse = {
+export type KPIResponse = {
     /**
      * The number of API calls for the given date range
      */
-    calls: number;
+    outcome: number;
     /**
-     * Optional response message for the request
+     * Optional response message for the KPI, e.g what the KPI actually was
      */
     message?: string;
 }

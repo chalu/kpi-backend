@@ -13,7 +13,7 @@ servers:
   - url: 'http://localhost:5000'
     description: Dev
 paths:
-  /v1/kpis/sandbox-api-calls:
+  /v1/kpis/api-calls:
     get:
       summary: Get API Calls
       tags:
@@ -25,11 +25,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/APIsUseResponse'
+                $ref: '#/components/schemas/KPIResponse'
               examples:
                 success:
                   value:
-                    calls: 604
+                    outcome: 604
                     message: request completed in 305 milliseconds
         '400':
           description: Bad Request
@@ -66,19 +66,11 @@ paths:
                     details: {}
       operationId: get-v1-kpis-sandbox-api-calls
       description: Get sandbox API calls count for a given period of time
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/APIsUseRequest'
-            examples:
-              Q3-2020:
-                value:
-                  fromDate: '1596236400000'
-                  toDate: '1604185200000'
-        description: Request data for making the API call
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
     parameters: []
-  /v1/kpis/sandbox-api-downloads:
+  /v1/kpis/api-downloads:
     get:
       summary: Get API Downloads
       tags:
@@ -90,11 +82,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/APIsUseResponse'
+                $ref: '#/components/schemas/KPIResponse'
               examples:
                 success:
                   value:
-                    calls: 604
+                    outcome: 604
                     message: request completed in 305 milliseconds
         '400':
           description: Bad Request
@@ -131,64 +123,257 @@ paths:
                     details: {}
       operationId: get-v1-kpis-sandbox-api-downloads
       description: Get sandbox API downloads count for a given period of time
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/APIsUseRequest'
-            examples:
-              Q3-2020:
-                value:
-                  fromDate: '1596236400000'
-                  toDate: '1604185200000'
-        description: Request data for making the API call
-components:
-  schemas:
-    APIsUseRequest:
-      title: ''
-      type: object
-      x-tags:
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+    parameters: []
+  /v1/kpis/members:
+    get:
+      summary: Get Members
+      tags:
         - KPIs
         - admin
-        - ''
-      description: HTTP request schema for getting Sandbox API calls KPI data
-      properties:
-        fromDate:
-          type: string
-          example: '1618255921030'
-          description: UNIX timestamp of the start date (inclusive) for API calls to include
-          pattern: '^\d{13}$'
-          minLength: 13
-          maxLength: 13
-        toDate:
-          type: string
-          description: UNIX timestamp of the end date (exclusive) for API calls to include
-          example: '1618255921030'
-          minLength: 13
-          maxLength: 13
-          pattern: '^\d{13}$'
-      required:
-        - fromDate
-        - toDate
-    APIsUseResponse:
-      title: APIsUseResponse
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIResponse'
+              examples:
+                success:
+                  value:
+                    outcome: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                bad-request:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+      operationId: get-v1-kpis-sandbox-members
+      description: Get sandbox members count for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+    parameters: []
+  /v1/kpis/api-callers:
+    get:
+      summary: Get API Callers
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIResponse'
+              examples:
+                success:
+                  value:
+                    outcome: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                request-error:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+      operationId: get-v1-kpis-api-callers
+      description: Get sandbox API callers count for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+  /v1/kpis/api-downloaders:
+    get:
+      summary: Get API Downloaders
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIResponse'
+              examples:
+                success:
+                  value:
+                    outcome: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                request-error:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthprized:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+      operationId: get-v1-kpis-api-downloaders
+      description: Get sandbox API downloaders count for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+  /v1/kpis/sandbox-users:
+    get:
+      summary: Get Sandbox Users
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIResponse'
+              examples:
+                success:
+                  value:
+                    outcome: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                request-error:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+      operationId: get-v1-kpis-sandbox-users
+      description: Get sandbox users count for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+        - $ref: '#/components/parameters/usageMode'
+components:
+  schemas:
+    KPIResponse:
+      title: KPIResponse
       type: object
       x-tags:
         - KPIs
         - admin
       description: HTTP response schema for getting Sandbox API calls KPI data
       properties:
-        calls:
+        outcome:
           type: integer
           format: int32
           example: 604
           description: The number of API calls for the given date range
         message:
           type: string
-          description: Optional response message for the request
+          description: 'Optional response message for the KPI, e.g what the KPI actually was'
           example: request completed in 305 milliseconds
       required:
-        - calls
+        - outcome
     ErrorResponse:
       title: ErrorResponse
       type: object
@@ -205,6 +390,39 @@ components:
           description: An optional dictionary of keys and values for the error raised
       required:
         - message
+  parameters:
+    toRange:
+      name: toRange
+      in: query
+      required: true
+      schema:
+        type: string
+        pattern: '^\d{13}$'
+        minLength: 13
+        maxLength: 13
+        example: '1618255921030'
+      description: UNIX timestamp of the end date (exclusive) for the data to include
+    fromRange:
+      name: fromRange
+      in: query
+      schema:
+        type: string
+        pattern: '^\d{13}$'
+        minLength: 13
+        maxLength: 13
+        example: '1618255921030'
+      description: UNIX timestamp of the start date (inclusive) for the data to include
+      required: true
+    usageMode:
+      name: mode
+      in: query
+      required: true
+      schema:
+        type: string
+        enum:
+          - UN
+          - INT
+      description: How to combine the supported user dimensions (i.e API callers / downloaders)
 tags:
   - name: admin
   - name: KPIs

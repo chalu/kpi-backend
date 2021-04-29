@@ -1,35 +1,21 @@
 import express, { Request } from "express";
-import { PrismaClient } from "@prisma/client";
 
-import { APIsUseResponse } from "../../oas-contract"
-
+import DB, { QUERIES } from '../../data/db';
+import { KPIResponse } from "../../oas-contract"
 import { ApiHandler, respondAs, respondWith, errAs } from "../core";
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
-const getSandboxAPICalls: ApiHandler<APIsUseResponse> = async (request: Request) => {
+const getSandboxAPICalls: ApiHandler<KPIResponse> = async (request: Request) => {
   let response;
-  const { fromDate, toDate } = request.body;
-
-  const query = {
-    where: {
-      AND: [{
-        added_at: {
-          gte: new Date(parseInt(fromDate, 10))
-        }
-      }, {
-        added_at: {
-          lte: new Date(parseInt(toDate, 10))
-        }
-      }]
-    }
-  }
+  const { fromRange, toRange } = request.query;
+  const toDate = new Date(parseInt(`${toRange}`, 10))
+  const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const callsCount = await prisma.apiLog.count(query);
-    const payload: APIsUseResponse = {
-        calls:callsCount
+    const result = await DB.query(QUERIES.getAPICalls(), [fromDate, toDate]);
+    const payload: KPIResponse = {
+      outcome:result.rowCount
     };
 
     response = respondAs(200, payload);

@@ -6,16 +6,16 @@ import { ApiHandler, respondAs, respondWith, errAs } from "../core";
 
 const router = express.Router();
 
-const getSandboxAPIDownloads: ApiHandler<KPIResponse> = async (request: Request) => {
+const getSandboxMembers: ApiHandler<KPIResponse> = async (request: Request) => {
   let response;
   const { fromRange, toRange } = request.query;
   const toDate = new Date(parseInt(`${toRange}`, 10))
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.getAPIDownloads(), [fromDate, toDate]);
+    const result = await DB.query(QUERIES.getMembers(), [fromDate, toDate]);
     const payload: KPIResponse = {
-        outcome:result.rowCount
+      outcome:result.rowCount
     };
 
     response = respondAs(200, payload);
@@ -27,6 +27,6 @@ const getSandboxAPIDownloads: ApiHandler<KPIResponse> = async (request: Request)
   return response;
 };
 
-router.get("/", respondWith(getSandboxAPIDownloads));
+router.get("/", respondWith(getSandboxMembers));
 
 export default router;
