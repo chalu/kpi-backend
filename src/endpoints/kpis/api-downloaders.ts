@@ -1,12 +1,12 @@
 import express, { Request } from "express";
 
 import DB, { QUERIES } from '../../data/db';
-import { KPIResponse } from "../../oas-contract"
+import { KPIFigureResponse } from "../../oas-contract"
 import { ApiHandler, respondAs, respondWith, errAs } from "../core";
 
 const router = express.Router();
 
-const getSandboxAPIDownloaders: ApiHandler<KPIResponse> = async (request: Request) => {
+const getSandboxAPIDownloaders: ApiHandler<KPIFigureResponse> = async (request: Request) => {
   let response;
   const { fromRange, toRange } = request.query;
   const toDate = new Date(parseInt(`${toRange}`, 10))
@@ -14,7 +14,7 @@ const getSandboxAPIDownloaders: ApiHandler<KPIResponse> = async (request: Reques
 
   try {
     const result = await DB.query(QUERIES.getAPIDownloaders(), [fromDate, toDate]);
-    const payload: KPIResponse = {
+    const payload: KPIFigureResponse = {
       outcome:result.rowCount
     };
 
