@@ -3,9 +3,9 @@
 /* eslint-disable */
 
 /**
- * HTTP response schema for getting Sandbox API calls KPI data
+ * HTTP response schema for Sandbox KPI figures
  */
-export type KPIResponse = {
+export type KPIFigureResponse = {
     /**
      * The number of API calls for the given date range
      */

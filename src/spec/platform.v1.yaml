@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: platform
   version: '1.0'
-  description: APIs for the FSI core platform services
+  description: APIs for the FSI core platform services backend
   contact:
     name: Charles Odili
     email: chaluwa@gmail.com
@@ -25,7 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KPIResponse'
+                $ref: '#/components/schemas/KPIFigureResponse'
               examples:
                 success:
                   value:
@@ -82,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KPIResponse'
+                $ref: '#/components/schemas/KPIFigureResponse'
               examples:
                 success:
                   value:
@@ -127,7 +127,7 @@ paths:
         - $ref: '#/components/parameters/fromRange'
         - $ref: '#/components/parameters/toRange'
     parameters: []
-  /v1/kpis/members:
+  /v1/kpis/members/range:
     get:
       summary: Get Members
       tags:
@@ -139,7 +139,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KPIResponse'
+                $ref: '#/components/schemas/KPIFigureResponse'
               examples:
                 success:
                   value:
@@ -183,7 +183,62 @@ paths:
       parameters:
         - $ref: '#/components/parameters/fromRange'
         - $ref: '#/components/parameters/toRange'
-    parameters: []
+  /v1/kpis/members/devs/range:
+    get:
+      summary: Get Members Registered As Developers
+      tags:
+        - KPIs
+        - admin
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIFigureResponse'
+              examples:
+                success:
+                  value:
+                    outcome: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                bad-request:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: 'Error completing your request. '
+                    details: {}
+      operationId: get-v1-kpis-sandbox-devs
+      description: Get sandbox developers count for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
   /v1/kpis/api-callers:
     get:
       summary: Get API Callers
@@ -196,7 +251,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KPIResponse'
+                $ref: '#/components/schemas/KPIFigureResponse'
               examples:
                 success:
                   value:
@@ -252,7 +307,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KPIResponse'
+                $ref: '#/components/schemas/KPIFigureResponse'
               examples:
                 success:
                   value:
@@ -308,7 +363,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KPIResponse'
+                $ref: '#/components/schemas/KPIFigureResponse'
               examples:
                 success:
                   value:
@@ -353,15 +408,123 @@ paths:
         - $ref: '#/components/parameters/fromRange'
         - $ref: '#/components/parameters/toRange'
         - $ref: '#/components/parameters/usageMode'
+  /v1/kpis/members/gender/range:
+    get:
+      summary: Get Member Gender Data
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIDataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: get-v1-kpis-members-gender-range
+      description: Get sandbox members' gender data for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+  /v1/kpis/members/location/range:
+    get:
+      summary: Get Member Location Data
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIDataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: get-v1-kpis-members-loc-range
+      description: Get sandbox members' location data for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+  /v1/kpis/members/age/range:
+    get:
+      summary: Get Member Age Data
+      tags:
+        - admin
+        - KPIs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIDataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: get-v1-kpis-members-age-range
+      description: Get sandbox members' age data for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
 components:
   schemas:
-    KPIResponse:
-      title: KPIResponse
+    KPIFigureResponse:
+      title: KPIFigureResponse
       type: object
       x-tags:
         - KPIs
         - admin
-      description: HTTP response schema for getting Sandbox API calls KPI data
+      description: HTTP response schema for Sandbox KPI figures
       properties:
         outcome:
           type: integer
@@ -390,6 +553,21 @@ components:
           description: An optional dictionary of keys and values for the error raised
       required:
         - message
+    KPIDataResponse:
+      title: KPIDataResponse
+      type: object
+      properties:
+        message:
+          example: request completed in 305 milliseconds
+          type: string
+          description: 'Optional response message for the KPI, e.g what the KPI actually was'
+        data:
+          type: array
+          items:
+            type: object
+      required:
+        - data
+      description: HTTP response schema for Sandbox KPI data
   parameters:
     toRange:
       name: toRange
