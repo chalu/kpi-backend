@@ -13,8 +13,7 @@ const getSandboxUsers: ApiHandler<KPIFigureResponse> = async (request: Request) 
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.getSandboxUsers(`${mode}`), [fromDate, toDate]);
-    console.log(result.rowCount);
+    const result = await DB.query(QUERIES.sandboxUsers(`${mode}`), [fromDate, toDate]);
     const payload: KPIFigureResponse = {
       outcome:result.rowCount
     };
@@ -28,6 +27,6 @@ const getSandboxUsers: ApiHandler<KPIFigureResponse> = async (request: Request) 
   return response;
 };
 
-router.get("/", respondWith(getSandboxUsers));
+router.get("/range", respondWith(getSandboxUsers));
 
 export default router;
