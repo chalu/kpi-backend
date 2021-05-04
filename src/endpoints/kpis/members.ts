@@ -27,6 +27,27 @@ const getMembersInRange: ApiHandler<KPIFigureResponse> = async (request: Request
   return response;
 };
 
+const getDevelopersInRange: ApiHandler<KPIFigureResponse> = async (request: Request) => {
+  let response;
+  const { fromRange, toRange } = request.query;
+  const toDate = new Date(parseInt(`${toRange}`, 10))
+  const fromDate = new Date(parseInt(`${fromRange}`, 10));
+
+  try {
+    const result = await DB.query(QUERIES.getDevelopersInRange(), [fromDate, toDate]);
+    const payload: KPIFigureResponse = {
+      outcome:result.rowCount
+    };
+
+    response = respondAs(200, payload);
+
+  } catch (e) {
+    response = errAs(e);
+  }
+
+  return response;
+};
+
 const getGenderInRange: ApiHandler<KPIDataResponse> = async (request: Request) => {
   let response;
   const { fromRange, toRange } = request.query;
@@ -71,9 +92,32 @@ const getLocationInRange: ApiHandler<KPIDataResponse> = async (request: Request)
   try {
     const result = await DB.query(QUERIES.getMemberLocationsInRange(), [fromDate, toDate]);
     const mapped = result.rows.reduce((map, {location: loc, count}) => {
-      if (loc.startsWith('Choose')) return map;
-
       map[loc] = parseInt(count, 10);
+      return map;
+    }, {});
+
+    const payload: KPIDataResponse = {
+      data: [mapped]
+    };
+
+    response = respondAs(200, payload);
+  } catch (e) {
+    response = errAs(e);
+  }
+
+  return response;
+};
+
+const getAgeInRange: ApiHandler<KPIDataResponse> = async (request: Request) => {
+  let response;
+  const { fromRange, toRange } = request.query;
+  const toDate = new Date(parseInt(`${toRange}`, 10))
+  const fromDate = new Date(parseInt(`${fromRange}`, 10));
+
+  try {
+    const result = await DB.query(QUERIES.getMemberAgeInRange(), [fromDate, toDate]);
+    const mapped = result.rows.reduce((map, {age, count}) => {
+      map[age] = parseInt(count, 10);
       return map;
     }, {});
 
@@ -91,9 +135,9 @@ const getLocationInRange: ApiHandler<KPIDataResponse> = async (request: Request)
 
 router.get("/range", respondWith(getMembersInRange));
 
-// router.get("/devs/range", respondWith(getMembersTillDate));
+router.get("/devs/range", respondWith(getDevelopersInRange));
 router.get("/gender/range", respondWith(getGenderInRange));
 router.get("/location/range", respondWith(getLocationInRange));
-// router.get("/age-group/range", respondWith(getMembersTillDate));
+router.get("/age/range", respondWith(getAgeInRange));
 
 export default router;
