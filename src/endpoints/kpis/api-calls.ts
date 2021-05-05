@@ -6,14 +6,14 @@ import { ApiHandler, respondAs, respondWith, errAs } from "../core";
 
 const router = express.Router();
 
-const getSandboxAPICalls: ApiHandler<KPIFigureResponse> = async (request: Request) => {
+const getAPICalls: ApiHandler<KPIFigureResponse> = async (request: Request) => {
   let response;
   const { fromRange, toRange } = request.query;
   const toDate = new Date(parseInt(`${toRange}`, 10))
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.getAPICalls(), [fromDate, toDate]);
+    const result = await DB.query(QUERIES.apiCalls(), [fromDate, toDate]);
     const payload: KPIFigureResponse = {
       outcome:result.rowCount
     };
@@ -27,6 +27,29 @@ const getSandboxAPICalls: ApiHandler<KPIFigureResponse> = async (request: Reques
   return response;
 };
 
-router.get("/", respondWith(getSandboxAPICalls));
+
+const getAPICallers: ApiHandler<KPIFigureResponse> = async (request: Request) => {
+  let response;
+  const { fromRange, toRange } = request.query;
+  const toDate = new Date(parseInt(`${toRange}`, 10))
+  const fromDate = new Date(parseInt(`${fromRange}`, 10));
+
+  try {
+    const result = await DB.query(QUERIES.apiCallers(), [fromDate, toDate]);
+    const payload: KPIFigureResponse = {
+      outcome:result.rowCount
+    };
+
+    response = respondAs(200, payload);
+
+  } catch (e) {
+    response = errAs(e);
+  }
+
+  return response;
+};
+
+router.get("/range", respondWith(getAPICalls));
+router.get("/callers/range", respondWith(getAPICallers));
 
 export default router;

@@ -2,7 +2,7 @@ import { Pool } from "pg";
 
 const pool = new Pool();
 
-const getAPICalls = () => `
+const apiCalls = () => `
     SELECT a.user_id, a.operation_type, a.status, added_at
     FROM public.api_logs as a
     WHERE (
@@ -12,7 +12,7 @@ const getAPICalls = () => `
     );
 `;
 
-const getAPIDownloads = () => `
+const apiDownloads = () => `
     SELECT d.user_id, d.operation_type, d.name, d.status, d.accessed_at
     FROM public.document_logs as d
     WHERE (
@@ -22,12 +22,12 @@ const getAPIDownloads = () => `
     );
 `;
 
-const getMembersInRange = () => `
+const membersInRange = () => `
     SELECT DISTINCT email, m.created_at FROM public.memberships as m
     WHERE m.created_at >= $1 AND m.created_at <= $2;
 `;
 
-const getDevelopersInRange = () => `
+const developersInRange = () => `
     SELECT m.interest FROM public.memberships as m 
     WHERE m.interest LIKE '%developer%'
         OR m.interest LIKE '%Engineer%'
@@ -35,28 +35,28 @@ const getDevelopersInRange = () => `
         AND m.created_at <= $2;
 `;
 
-const getMemberAgeInRange = () => `
+const memberAgeInRange = () => `
     SELECT m.age_range as age, COUNT(m.age_range) as count FROM public.memberships as m
     WHERE m.age_range != 'Select an age range' AND m.created_at >= $1 AND m.created_at <= $2
     GROUP BY m.age_range
     ORDER BY count DESC;
 `;
 
-const getMemberGendersInRange = () => `
+const memberGendersInRange = () => `
     SELECT m.gender, COUNT(m.gender) as count FROM public.memberships as m
     WHERE m.created_at >= $1 AND m.created_at <= $2
     GROUP BY m.gender
     ORDER By count DESC;
 `;
 
-const getMemberLocationsInRange = () => `
+const memberLocationsInRange = () => `
     SELECT m.location, COUNT(m.location) as count FROM public.memberships as m
     WHERE m.location != 'Choose your current location' AND m.created_at >= $1 AND m.created_at <= $2
     GROUP BY m.location
     ORDER By count DESC;
 `;
 
-const getAPICallers = () => `
+const apiCallers = () => `
     SELECT DISTINCT a.user_id, a.operation_type
     FROM public.api_logs as a
     WHERE (
@@ -66,7 +66,7 @@ const getAPICallers = () => `
     );
 `;
 
-const getAPIDownloaders = () => `
+const apiDownloaders = () => `
     SELECT DISTINCT d.user_id, d.operation_type
     FROM public.document_logs as d
     WHERE (
@@ -101,16 +101,16 @@ const sandboxUsers = (mode: string) => {
 };
 
 export const QUERIES = {
-    getAPICalls,
-    getAPICallers,
-    getMembersInRange,
-    getAPIDownloads,
-    getAPIDownloaders,
+    apiCalls,
+    apiCallers,
+    membersInRange,
+    apiDownloads,
+    apiDownloaders,
     sandboxUsers,
-    getMemberGendersInRange,
-    getMemberLocationsInRange,
-    getDevelopersInRange,
-    getMemberAgeInRange
+    memberGendersInRange,
+    memberLocationsInRange,
+    developersInRange,
+    memberAgeInRange
 };
 
 export default pool;
