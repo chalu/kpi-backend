@@ -1,8 +1,7 @@
 import { Pool } from "pg";
 
-console.log('DB :: ', process.env.DATABASE_URL);
-
-const pool = new Pool();
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
 
 const apiCalls = () => `
     SELECT a.user_id, a.operation_type, a.status, added_at
