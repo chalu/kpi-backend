@@ -1,7 +1,12 @@
 import { Pool } from "pg";
 
 const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ connectionString });
+const pool = new Pool({
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 const apiCalls = () => `
     SELECT a.user_id, a.operation_type, a.status, added_at
@@ -78,9 +83,9 @@ const apiDownloaders = () => `
 `;
 
 const sandboxUsers = (mode: string) => {
-    const queryMode = mode === 'UN' ? 'UNION' : 'INTERSECT'; 
+  const queryMode = mode === "UN" ? "UNION" : "INTERSECT";
 
-    return `
+  return `
     SELECT DISTINCT d.user_id
     FROM public.document_logs as d
     WHERE (
@@ -102,16 +107,16 @@ const sandboxUsers = (mode: string) => {
 };
 
 export const QUERIES = {
-    apiCalls,
-    apiCallers,
-    membersInRange,
-    apiDownloads,
-    apiDownloaders,
-    sandboxUsers,
-    memberGendersInRange,
-    memberLocationsInRange,
-    developersInRange,
-    memberAgeInRange
+  apiCalls,
+  apiCallers,
+  membersInRange,
+  apiDownloads,
+  apiDownloaders,
+  sandboxUsers,
+  memberGendersInRange,
+  memberLocationsInRange,
+  developersInRange,
+  memberAgeInRange,
 };
 
 export default pool;
