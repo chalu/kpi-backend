@@ -28,36 +28,36 @@ const apiDownloads = () => `
     );
 `;
 
-const membersInRange = () => `
+const members = () => `
     SELECT DISTINCT email, m.created_at FROM public.memberships as m
-    WHERE m.created_at >= $1 AND m.created_at <= $2;
+    WHERE m.created_at >= $1 AND m.created_at < $2;
 `;
 
-const developersInRange = () => `
+const developers = () => `
     SELECT m.interest FROM public.memberships as m 
     WHERE m.interest LIKE '%developer%'
         OR m.interest LIKE '%Engineer%'
         AND m.created_at >= $1 
-        AND m.created_at <= $2;
+        AND m.created_at < $2;
 `;
 
-const memberAgeInRange = () => `
+const memberAges = () => `
     SELECT m.age_range as age, COUNT(m.age_range) as count FROM public.memberships as m
-    WHERE m.age_range != 'Select an age range' AND m.created_at >= $1 AND m.created_at <= $2
+    WHERE m.age_range != 'Select an age range' AND m.created_at >= $1 AND m.created_at < $2
     GROUP BY m.age_range
     ORDER BY count DESC;
 `;
 
-const memberGendersInRange = () => `
+const memberGenders = () => `
     SELECT m.gender, COUNT(m.gender) as count FROM public.memberships as m
-    WHERE m.created_at >= $1 AND m.created_at <= $2
+    WHERE m.created_at >= $1 AND m.created_at < $2
     GROUP BY m.gender
     ORDER By count DESC;
 `;
 
-const memberLocationsInRange = () => `
+const memberLocations = () => `
     SELECT m.location, COUNT(m.location) as count FROM public.memberships as m
-    WHERE m.location != 'Choose your current location' AND m.created_at >= $1 AND m.created_at <= $2
+    WHERE m.location != 'Choose your current location' AND m.created_at >= $1 AND m.created_at < $2
     GROUP BY m.location
     ORDER By count DESC;
 `;
@@ -80,7 +80,7 @@ const apiCallsIntensity = (tsmeasure: string) => {
         (
             SELECT extract(${measure} from added_at) AS ${field}
             FROM public.api_logs
-            WHERE added_at >= $1 AND added_at <= $2
+            WHERE added_at >= $1 AND added_at < $2
         ) AS presence
         GROUP BY ${field}
         ORDER BY intensity DESC;
@@ -90,7 +90,7 @@ const apiCallsIntensity = (tsmeasure: string) => {
 const apiCallsStatus = () => `
     SELECT a.status, count(a.status) 
     FROM public.api_logs as a
-    WHERE a.added_at >= $1 AND a.added_at <= $2
+    WHERE a.added_at >= $1 AND a.added_at < $2
     GROUP BY a.status;
 `;
 
@@ -131,14 +131,14 @@ const sandboxUsers = (mode: string) => {
 export const QUERIES = {
   apiCalls,
   apiCallers,
-  membersInRange,
+  members,
   apiDownloads,
   apiDownloaders,
   sandboxUsers,
-  memberGendersInRange,
-  memberLocationsInRange,
-  developersInRange,
-  memberAgeInRange,
+  memberGenders,
+  memberLocations,
+  developers,
+  memberAges,
   apiCallsIntensity,
   apiCallsStatus
 };

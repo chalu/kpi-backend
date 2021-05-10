@@ -27,10 +27,10 @@ app.use("/favicon.ico", express.static(ico));
 // Turn on spec-driven validation for HTTP requests
 // Erring requests will not get to the controllers.
 // Raises a 4xx that is relayed to the client by the catch-all error handler
-// const apiSpec = path.join(__dirname, "spec/platform.v1.yaml");
-// app.use(
-//   APIValidator.middleware({ apiSpec })
-// );
+const apiSpec = path.join(__dirname, "spec/platform.v1.yaml");
+app.use(
+  APIValidator.middleware({ apiSpec })
+);
 
 // Mount controllers
 const APIVersion = process.env.API_VERSION;

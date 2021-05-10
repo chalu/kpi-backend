@@ -2,7 +2,21 @@ openapi: 3.0.0
 info:
   title: platform
   version: '1.0'
-  description: APIs for the FSI core platform services backend
+  description: |
+    This is a REST API specification for the FSI KPIs backend application which powers a 
+    simple dashboard for donor KPIs and a few other useful stats.
+
+    #Introduction
+    This API was designed and documented in the **OpenAPI 3.1** format
+
+    # Cross-Origin Resource Sharing
+    This API is implemented to feature Cross-Origin Resource Sharing (CORS) implemented in compliance with [W3C spec](https://www.w3.org/TR/cors/).
+    This allows cross-domain communication from the browser and other HTTP clients.
+
+    # Authentication
+    V1 of this API (the current version) does no provide any authentication schemes as the API in intented primarily for
+    internal use within a controlled environment. Subsequent iterations can prioritze adding an authentication and authorization
+    layer as necessary.
   contact:
     name: Charles Odili
     email: chaluwa@gmail.com
@@ -12,13 +26,15 @@ info:
 servers:
   - url: 'http://localhost:5000'
     description: Dev
+  - url: 'https://fsi-kpis-backend-ctpqc.ondigitalocean.app/v1/kpis'
+    description: Staging
 paths:
-  /v1/kpis/api-calls:
+  /v1/kpis/api-calls/range:
     get:
       summary: Get API Calls
       tags:
-        - admin
         - KPIs
+        - API Calls
       responses:
         '200':
           description: OK
@@ -69,13 +85,125 @@ paths:
       parameters:
         - $ref: '#/components/parameters/fromRange'
         - $ref: '#/components/parameters/toRange'
-    parameters: []
-  /v1/kpis/api-downloads:
+  /v1/kpis/api-calls/status/range:
+    get:
+      summary: Get Status of API Calls
+      tags:
+        - KPIs
+        - API Calls
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIFigureResponse'
+              examples:
+                success:
+                  value:
+                    outcome: 604
+                    message: request completed in 305 milliseconds
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                bad-request:
+                  value:
+                    message: Unable to proceed. Pls check your request data
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: Unable to proceed. Inssuficient user permissions
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: Error completing your request. Pls contact the admin or try again later
+                    details: {}
+      operationId: get-v1-kpis-sandbox-api-calls-status
+      description: Get sandbox API calls status for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+  /v1/kpis/api-calls/intensity/range:
+    get:
+      summary: Get API Calls Intensity/Density
+      tags:
+        - API Calls
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPIDataResponse'
+              examples:
+                success:
+                  value:
+                    message: request completed in 305 milliseconds
+                    data:
+                      - {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                bad-request:
+                  value:
+                    message: Unable to proceed. Pls check your request data
+                    details: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  value:
+                    message: Unable to proceed. Inssuficient user permissions
+                    details: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  value:
+                    message: Error completing your request. Pls contact the admin or try again later
+                    details: {}
+      operationId: get-v1-kpis-sandbox-api-calls-intensity
+      description: Get sandbox API calls intensity/density for a given period of time
+      parameters:
+        - $ref: '#/components/parameters/fromRange'
+        - $ref: '#/components/parameters/toRange'
+        - $ref: '#/components/parameters/tsMeasure'
+  /v1/kpis/api-downloads/range:
     get:
       summary: Get API Downloads
       tags:
-        - admin
         - KPIs
+        - API Downloads
       responses:
         '200':
           description: OK
@@ -132,7 +260,7 @@ paths:
       summary: Get Members
       tags:
         - KPIs
-        - admin
+        - Users
       responses:
         '200':
           description: OK
@@ -188,7 +316,7 @@ paths:
       summary: Get Members Registered As Developers
       tags:
         - KPIs
-        - admin
+        - Users
       responses:
         '200':
           description: OK
@@ -239,12 +367,13 @@ paths:
       parameters:
         - $ref: '#/components/parameters/fromRange'
         - $ref: '#/components/parameters/toRange'
-  /v1/kpis/api-callers:
+  /v1/kpis/api-calls/callers/range:
     get:
       summary: Get API Callers
       tags:
-        - admin
+        - API Calls
         - KPIs
+        - Users
       responses:
         '200':
           description: OK
@@ -295,12 +424,14 @@ paths:
       parameters:
         - $ref: '#/components/parameters/fromRange'
         - $ref: '#/components/parameters/toRange'
-  /v1/kpis/api-downloaders:
+    parameters: []
+  /v1/kpis/api-downloads/downloaders/range:
     get:
       summary: Get API Downloaders
       tags:
-        - admin
+        - API Downloads
         - KPIs
+        - Users
       responses:
         '200':
           description: OK
@@ -351,12 +482,15 @@ paths:
       parameters:
         - $ref: '#/components/parameters/fromRange'
         - $ref: '#/components/parameters/toRange'
-  /v1/kpis/sandbox-users:
+    parameters: []
+  /v1/kpis/sandbox-users/range:
     get:
       summary: Get Sandbox Users
       tags:
-        - admin
+        - API Calls
         - KPIs
+        - Users
+        - API Downloads
       responses:
         '200':
           description: OK
@@ -408,12 +542,12 @@ paths:
         - $ref: '#/components/parameters/fromRange'
         - $ref: '#/components/parameters/toRange'
         - $ref: '#/components/parameters/usageMode'
+    parameters: []
   /v1/kpis/members/gender/range:
     get:
       summary: Get Member Gender Data
       tags:
-        - admin
-        - KPIs
+        - Users
       responses:
         '200':
           description: OK
@@ -448,8 +582,7 @@ paths:
     get:
       summary: Get Member Location Data
       tags:
-        - admin
-        - KPIs
+        - Users
       responses:
         '200':
           description: OK
@@ -484,8 +617,7 @@ paths:
     get:
       summary: Get Member Age Data
       tags:
-        - admin
-        - KPIs
+        - Users
       responses:
         '200':
           description: OK
@@ -601,6 +733,33 @@ components:
           - UN
           - INT
       description: How to combine the supported user dimensions (i.e API callers / downloaders)
+    tsMeasure:
+      name: tsmeasure
+      in: query
+      schema:
+        type: string
+        enum:
+          - day
+          - hour
+      required: true
+      description: What aspect of the recorded timestamp to measure and extract information from
 tags:
-  - name: admin
+  - name: Users
+    description: Sandbox users and their usage
   - name: KPIs
+    description: related to or required as an FSI KPI
+  - name: API Calls
+    description: Related to API calls
+  - name: API Downloads
+    description: Related to API downloads
+x-tagGroups:
+  - name: Sandbox APIs
+    tags:
+      - API Calls
+      - API Downloads
+  - name: People
+    tags:
+      - Users
+  - name: Donor KPIs
+    tags:
+      - KPIs

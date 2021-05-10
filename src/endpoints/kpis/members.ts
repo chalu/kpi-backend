@@ -13,7 +13,7 @@ const getMembersInRange: ApiHandler<KPIFigureResponse> = async (request: Request
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.membersInRange(), [fromDate, toDate]);
+    const result = await DB.query(QUERIES.members(), [fromDate, toDate]);
     const payload: KPIFigureResponse = {
       outcome:result.rowCount
     };
@@ -34,7 +34,7 @@ const getDevelopersInRange: ApiHandler<KPIFigureResponse> = async (request: Requ
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.developersInRange(), [fromDate, toDate]);
+    const result = await DB.query(QUERIES.developers(), [fromDate, toDate]);
     const payload: KPIFigureResponse = {
       outcome:result.rowCount
     };
@@ -55,7 +55,7 @@ const getGenderInRange: ApiHandler<KPIDataResponse> = async (request: Request) =
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.memberGendersInRange(), [fromDate, toDate]);
+    const result = await DB.query(QUERIES.memberGenders(), [fromDate, toDate]);
     const mapped = result.rows.reduce((map, {gender: g, count}) => {
       let key = '';
       if (g === 'Male' || g === '{text:Male}' || g === 'm') key = 'Male';
@@ -90,7 +90,7 @@ const getLocationInRange: ApiHandler<KPIDataResponse> = async (request: Request)
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.memberLocationsInRange(), [fromDate, toDate]);
+    const result = await DB.query(QUERIES.memberLocations(), [fromDate, toDate]);
     const mapped = result.rows.reduce((map, {location: loc, count}) => {
       map[loc] = parseInt(count, 10);
       return map;
@@ -115,7 +115,7 @@ const getAgeInRange: ApiHandler<KPIDataResponse> = async (request: Request) => {
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.memberAgeInRange(), [fromDate, toDate]);
+    const result = await DB.query(QUERIES.memberAges(), [fromDate, toDate]);
     const mapped = result.rows.reduce((map, {age, count}) => {
       map[age] = parseInt(count, 10);
       return map;

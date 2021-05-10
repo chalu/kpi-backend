@@ -50,13 +50,12 @@ const getAPICallers: ApiHandler<KPIFigureResponse> = async (request: Request) =>
 
 const getAPICallIntensity: ApiHandler<KPIDataResponse> = async (request: Request) => {
   let response;
-  const { fromRange, toRange } = request.query;
-  const { tsmeasure } = request.params;
+  const { fromRange, toRange, tsmeasure } = request.query;
   const toDate = new Date(parseInt(`${toRange}`, 10))
   const fromDate = new Date(parseInt(`${fromRange}`, 10));
 
   try {
-    const result = await DB.query(QUERIES.apiCallsIntensity(tsmeasure), [fromDate, toDate]);
+    const result = await DB.query(QUERIES.apiCallsIntensity(`${tsmeasure}`), [fromDate, toDate]);
     const payload: KPIDataResponse = {
       data: result.rows
     };
@@ -94,6 +93,6 @@ const getAPICallStatus: ApiHandler<KPIDataResponse> = async (request: Request) =
 router.get("/range", respondWith(getAPICalls));
 router.get("/status/range", respondWith(getAPICallStatus));
 router.get("/callers/range", respondWith(getAPICallers));
-router.get("/intensity/:tsmeasure/range", respondWith(getAPICallIntensity));
+router.get("/intensity/range", respondWith(getAPICallIntensity));
 
 export default router;
