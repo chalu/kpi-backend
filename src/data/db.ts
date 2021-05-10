@@ -72,6 +72,28 @@ const apiCallers = () => `
     );
 `;
 
+const apiCallsIntensity = (tsmeasure: string) => {
+    const [field, measure] = tsmeasure === 'day' ? ['day', 'DOW'] : ['hour', 'hour'];
+    return `
+        SELECT ${field}, count(${field}) as intensity
+        FROM
+        (
+            SELECT extract(${measure} from added_at) AS ${field}
+            FROM public.api_logs
+            WHERE added_at >= $1 AND added_at <= $2
+        ) AS presence
+        GROUP BY ${field}
+        ORDER BY intensity DESC;
+    `;
+};
+
+const apiCallsStatus = () => `
+    SELECT a.status, count(a.status) 
+    FROM public.api_logs as a
+    WHERE a.added_at >= $1 AND a.added_at <= $2
+    GROUP BY a.status;
+`;
+
 const apiDownloaders = () => `
     SELECT DISTINCT d.user_id, d.operation_type
     FROM public.document_logs as d
@@ -117,6 +139,8 @@ export const QUERIES = {
   memberLocationsInRange,
   developersInRange,
   memberAgeInRange,
+  apiCallsIntensity,
+  apiCallsStatus
 };
 
 export default pool;
